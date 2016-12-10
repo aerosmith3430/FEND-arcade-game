@@ -38,6 +38,7 @@ var Player = function(x, y) {
 
 Player.prototype.update = function(dt) {
     this.collision();
+    this.endGame()
 };
 
 Player.prototype.render = function() {
@@ -47,23 +48,23 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(direction) {
     switch(direction) {
         case 'up':
-            if (this.y > 0) {
-               this.y -= 40; 
+            if (this.y > -10) {
+               this.y -= 30; 
             }
             break;
         case 'down':
             if (this.y < 400) {
-                this.y += 40;
+                this.y += 30;
             }
             break;
         case 'left':
             if (this.x > 0) {
-                this.x -= 40;
+                this.x -= 30;
             }
             break;
         case 'right':
             if (this.x < 400) {
-                this.x += 40;
+                this.x += 30;
             }
             break;
     }    
@@ -72,10 +73,16 @@ Player.prototype.handleInput = function(direction) {
 Player.prototype.collision = function() {
     for (var i = 0; i < allEnemies.length; i++) {
         var playerCharacter = {x: this.x, y: this.y, width: 40, height: 40};
-        var enemyCharacter = {x: allEnemies[i].x, y: allEnemies[i].y, width: 50, height: 40};
+        var enemyCharacter = {x: allEnemies[i].x, y: allEnemies[i].y, width: 70, height: 40};
         if (playerCharacter.x < enemyCharacter.x + enemyCharacter.width && playerCharacter.x + playerCharacter.width > enemyCharacter.x && playerCharacter.y < enemyCharacter.y + enemyCharacter.height && playerCharacter.height + playerCharacter.y > enemyCharacter.y) {
-            player.reset(200,400);
+            this.reset(200,400);
         }
+    }
+}
+
+Player.prototype.endGame = function() {
+    if(this.y < 0) {
+        endText();
     }
 }
 
@@ -102,3 +109,13 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+var endText = function() {
+    ctx.font = "36pt Impact";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "white";
+    ctx.fillText("YOU WIN!", 505 / 2, 40);
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
+    ctx.strokeText("YOU WIN!", 505 / 2, 40);
+};
