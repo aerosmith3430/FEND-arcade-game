@@ -37,7 +37,7 @@ var Player = function(x, y) {
 };
 
 Player.prototype.update = function(dt) {
-
+    this.collision();
 };
 
 Player.prototype.render = function() {
@@ -68,6 +68,21 @@ Player.prototype.handleInput = function(direction) {
             break;
     }    
 };
+
+Player.prototype.collision = function() {
+    for (var i = 0; i < allEnemies.length; i++) {
+        var playerCharacter = {x: this.x, y: this.y, width: 40, height: 40};
+        var enemyCharacter = {x: allEnemies[i].x, y: allEnemies[i].y, width: 50, height: 40};
+        if (playerCharacter.x < enemyCharacter.x + enemyCharacter.width && playerCharacter.x + playerCharacter.width > enemyCharacter.x && playerCharacter.y < enemyCharacter.y + enemyCharacter.height && playerCharacter.height + playerCharacter.y > enemyCharacter.y) {
+            player.reset(200,400);
+        }
+    }
+}
+
+Player.prototype.reset = function(x,y) {
+    this.x = x;
+    this.y = y;
+}
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
