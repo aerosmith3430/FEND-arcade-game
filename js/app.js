@@ -1,50 +1,47 @@
-// Enemies our player must avoid
+// Enemy constructor function.  Takes in starting x, y coordinates, speed and image file.
+// The variables defined in the function will be the starting attributes applied to all instances of this class.
 var Enemy = function(x, y, speed) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
     this.x = x;
     this.y = y;
     this.speed = speed;
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 };
 
-// Update the enemy's position, required method for game
+// This function updates the canvas at the interval specified in the dt parameter.
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     this.x += (dt * this.speed);
     if (this.x > 500) {
         this.x = 1;
     }
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
 };
 
-// Draw the enemy on the screen, required method for game
+// The render function calls the drawImage function which renders the characters on the canvas.
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Player constructor function.  Takes in starting x, y coordinates and image file.
+// The variables defined in the function will be the starting attributes applied to the instance of this class.
 var Player = function(x, y) {
     this.x = x;
     this.y = y;
     this.sprite = 'images/char-boy.png';
 };
 
+// This function updates the canvas at the interval specified in the dt parameter.
+// Parameter: dt, a time delta between ticks
 Player.prototype.update = function(dt) {
     this.collision();
     this.endGame()
 };
 
+// The render function calls the drawImage function which renders the characters on the canvas.
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// This function records the pressing of the arrow keys and translates it into player movement on the canvas.
 Player.prototype.handleInput = function(direction) {
     switch(direction) {
         case 'up':
@@ -70,6 +67,7 @@ Player.prototype.handleInput = function(direction) {
     }    
 };
 
+// This function defines boxes around the enemies and the player and looks for collisions between the player and enemy boxes.  If it detects a collision, the player.reset function is called.
 Player.prototype.collision = function() {
     for (var i = 0; i < allEnemies.length; i++) {
         var playerCharacter = {x: this.x, y: this.y, width: 40, height: 40};
@@ -80,25 +78,25 @@ Player.prototype.collision = function() {
     }
 }
 
+// This function calls the endText function when the top of the y axis is reached.
 Player.prototype.endGame = function() {
     if(this.y < 0) {
         endText();
     }
 }
 
+// This function resets the player to the beginning point on the canvas.
 Player.prototype.reset = function(x,y) {
     this.x = x;
     this.y = y;
 }
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
 
+// All instances of the Enemy class are contained in an array.
 var allEnemies = [new Enemy(1, 65, 100), new Enemy(1, 145, 200), new Enemy(1, 225, 300)];
-var player = new Player(200,400);
+var player = new Player(200,400); // Instance of the Player class.
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Player.handleInput() method.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -110,6 +108,7 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+// This function displays text when the player reaches the water and wins the game.
 var endText = function() {
     ctx.font = "36pt Impact";
     ctx.textAlign = "center";
